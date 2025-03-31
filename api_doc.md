@@ -1,21 +1,7 @@
-## 删除用户
-URL: /delete_user
-Method: post
-
-参数: user_id
-格式: json
-`{"id": <user_id> }`
-
-返回:<br>
-    `{"code": 0, "msg": "ok"}`<br>
-    `{"code": 1, "msg": "error"}`
-
-
 ## 通过用户名字获取用户信息
-
-URL: /get_user_by_name<br>
-method: get<br>
-参数: name<br>
+URL: `/get_users_by_name`<br>
+method: `get`<br>
+参数: `name`<br>
 返回:<br>
     `{"code": 200, "msg": "ok", "data": [...]}`<br>
     `{"code": 400, "msg": "not found"}`
@@ -29,3 +15,53 @@ method: get<br>
             "age": age
         }
 
+## 通过获取制定性别的用户
+URL: `/get_users_by_gender`<br>
+method: `get`<br>
+参数: `gender`<br>
+返回:<br>
+    `{"code": 200, "msg": "ok", "data": [...]}`
+```
+data包含用户对象    
+User对象结构:
+    {
+        "id": id,
+        "username": username,
+        "gender": gender,
+        "age": age
+    } 
+```
+
+## 通过获取制定年龄的用户
+URL: `/get_users_by_age`<br>
+method: `get`<br>
+参数: `age`<br>
+返回:<br>
+    `{"code": 200, "msg": "ok", "data": [...]}`
+ ```
+ data包含用户对象    
+ User对象结构:
+     {
+         "id": id,
+         "username": username,
+         "gender": gender,
+         "age": age
+     }
+```
+
+## 通过年龄范围获取用户
+URL: `/get_users_by_age_range`<br>
+method: `get`<br>
+参数: `age_min`, `age_max`
+返回:<br>
+    `{"code": 200, "msg": "ok", "data": [...]}`
+```
+data包含用户对象    
+User对象结构:
+    {
+        "id": id,
+        "username": username,
+        "gender": gender,
+        "age": age
+    }
+```
