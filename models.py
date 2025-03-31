@@ -1,7 +1,7 @@
 from app import db as database
 
 class User(database.Model):
-    id = database.Column(database.Integer, primary_key=True, auto_increament=True)
+    id = database.Column(database.Integer, primary_key=True)
     username = database.Column(database.String(80), unique=True, nullable=False)
     gender = database.Column(database.Integer, nullable=False)
     age = database.Column(database.Integer, nullable=False)
@@ -43,12 +43,14 @@ class User(database.Model):
             if field in data:
                 setattr(self, field, data[field])
 
-    def findUsersByName(self, name):
+    @staticmethod
+    def findUsersByName(name):
         return User.query.filter_by(username=name)
-    
-    def findUserById(self, id):
+    @staticmethod
+    def findUserById(cls, id):
         return User.query.filter_by(id=id)
     
 
-    def findUsersByGender(self, gender):
+    @staticmethod
+    def findUsersByGender(cls, gender):
         return User.query.filter_by(gender=gender)

@@ -1,14 +1,12 @@
+from flask import render_template, request
 from app import app
 from models import User
 
-from flask import render_template, request
-
-
 @app.route("/")
 def index():
-    return "Hello World!"
+    return render_template("user_query.html")
 
-@app.route("/get_user_by_name", methods=["GET"])
+@app.route("/get_users_by_name", methods=["GET"])
 def getUser():
     data = {
         "code": "200",
@@ -22,12 +20,15 @@ def getUser():
         data["msg"] = "name is required"
         return data
     
-    users = User.findUsersByName()
+    users = User.findUsersByName(name)
 
     if not users:
         data["code"] = "400"
         data["msg"] = "user not found"
         return data
+    
+    data["data"] = [user.to_dict() for user in users]
+    return data
     
 
 @app.route("/add_user", methods=["POST"])
@@ -84,7 +85,7 @@ def updateUser():
         return data
     
 
-@app.route("/get_user_by_gender", methods=["GET"])
+@app.route("/get_users_by_gender", methods=["GET"])
 
 def getUserByGender():
     data = {
