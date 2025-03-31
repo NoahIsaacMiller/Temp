@@ -65,6 +65,11 @@ def getUserByAge():
         data["msg"] = "age is required"
         return data
     
+    if not age.isdigit():
+        data["code"] = "400"
+        data["msg"] = "age is invalid"
+        return data
+    
     users = User.query.filter_by(age=age).all()
     data["data"] = [user.to_dict() for user in users]
     return data
@@ -78,6 +83,21 @@ def getUserByAgeRange():
     }
     age_min = request.args.get("age_min")
     age_max = request.args.get("age_max")
+
+    if not age_min and not age_max:
+        data["code"] = "400"
+        data["msg"] = "age_min and age_max are required"
+        return data
+    
+    if not age_min.isdigit() or not age_max.isdigit():
+        data["code"] = "400"
+        data["msg"] = "age_min and age_max are invalid"
+        return data
+    
+    if int(age_min) > int(age_max):
+        data["code"] = "400"
+        data["msg"] = "age_min is greater than age_max"
+        return data
 
     if not age_min or not age_max:
         data["code"] = "400"
