@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SOVO技术团队</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        .action-icons {
+            cursor: pointer;
+            margin-right: 8px;
+        }
+        #addButton {
+            margin-bottom: 10px;
+            padding: 5px 10px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            function loadMembers(url, params) {
+                $.ajax({
+                    url: url,
+                    method: "GET",
+                    data: params,
+                    success: function (response) {
+                        if (response.code === 200) {
+                            let tbody = $("tbody");
+                            tbody.empty(); 
+                            response.data.forEach(function (member) {
+                                let row = `
+                                    <tr id="row-${member.id}">
+                                        <td>${member.username}</td>
+                                        <td>${member.age}</td>
+                                        <td>${member.gender}</td>
+                                        <td>
+                                            <span class="action-icons" onclick="editRow(${member.id})">✏️</span>
+                                            <span class="action-icons" onclick="deleteRow(${member.id})">🗑️</span>
+                                        </td>
+                                    </tr>
+                                `;
+                                tbody.append(row);
+                            });
+                        } else {
+                            alert("未找到相关用户");
+                        }
+                    },
+                    error: function () {
+                        alert("搜索失败");
+                    }
+                });
+            }
+
+            $("#searchByName").click(function () {
+                let name = $("#nameInput").val();
+                if (name) {
+                    loadMembers("/get_users_by_name", { name: name });
+                }
+            });
+
+            $("#searchByGender").click(function () {
+                let gender = $("#genderInput").val();
+                if (gender) {
+                    loadMembers("/get_users_by_gender", { gender: gender });
+                }
+            });
+
+            $("#searchByAge").click(function () {
+                let age = $("#ageInput").val();
+                if (age) {
+                    loadMembers("/get_users_by_age", { age: age });
+                }
+            });
+
+            $("#searchByAgeRange").click(function () {
+                let ageMin = $("#ageMinInput").val();
+                let ageMax = $("#ageMaxInput").val();
+                if (ageMin && ageMax) {
+                    loadMembers("/get_users_by_age_range", { age_min: ageMin, age_max: ageMax });
+                }
+            });
+
+            $("#addButton").click(function () {
+                let name = prompt("输入姓名");
+                let age = prompt("输入年龄");
+                let gender = prompt("输入性别");
+                if (name && age && gender) {
+                    $.ajax({
+                        url: "/api/members",
+                        method: "POST",
+                        contentType: "application/json",
+                        data: JSON.stringify({ username: name, age: age, gender: gender }),
+                        success: function (response) {
+                            if (response.code === 200) {
+                                loadMembers("/get_users_by_name", { name: name });
+                            } else {
+                                alert("添加成员失败");
+                            }
+                        },
+                        error: function () {
+                            alert("请求失败");
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+    <h1>SOVO技术团队</h1>
+    <div>
+        <input type="text" id="nameInput" placeholder="按姓名搜索">
+        <button id="searchByName">搜索</button>
+        <input type="text" id="genderInput" placeholder="按性别搜索">
+        <button id="searchByGender">搜索</button>
+        <input type="number" id="ageInput" placeholder="按年龄搜索">
+        <button id="searchByAge">搜索</button>
+        <input type="number" id="ageMinInput" placeholder="最小年龄">
+        <input type="number" id="ageMaxInput" placeholder="最大年龄">
+        <button id="searchByAgeRange">按年龄范围搜索</button>
+    </div>
+    <button id="addButton">添加成员</button>
+    <table>
+        <thead>
+            <tr>
+                <th>姓名</th>
+                <th>年龄</th>
+                <th>性别</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- 动态加载成员列表 -->
+        </tbody>
+    </table>
+</body>
+</html>

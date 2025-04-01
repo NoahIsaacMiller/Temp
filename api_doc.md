@@ -19,6 +19,7 @@ method: `get`<br>
 URL: `/get_users_by_gender`<br>
 method: `get`<br>
 参数: `gender`<br>
+gender可选值: `0` 男性, `1` 女性<br>
 返回:<br>
     `{"code": 200, "msg": "ok", "data": [...]}`
 ```

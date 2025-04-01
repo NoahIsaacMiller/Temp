@@ -47,10 +47,10 @@ class User(database.Model):
     def findUsersByName(name):
         return User.query.filter_by(username=name)
     @staticmethod
-    def findUserById(cls, id):
+    def findUserById(id):
         return User.query.filter_by(id=id)
     
 
     @staticmethod
-    def findUsersByGender(cls, gender):
+    def findUsersByGender(gender):
         return User.query.filter_by(gender=gender)
